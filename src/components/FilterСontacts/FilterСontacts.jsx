@@ -1,4 +1,4 @@
-export const FindСontacts = ({onChange, filter}) => {
+export const FilterСontacts = ({onChange, filter}) => {
     return(
         <input 
         value={filter}

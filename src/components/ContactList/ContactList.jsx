@@ -1,7 +1,7 @@
-export const ContactList = ({ filterContacts, onClick }) => {
+export const ContactList = ({ contacts, onClick }) => {
     return(
         <ul >
-      {filterContacts?.map(({id, name, number }) => {
+      {contacts?.map(({id, name, number }) => {
         return (
           <li  key={id}>
             <span >{name}: </span>

@@ -5,7 +5,7 @@ import { NumberInput } from "./NumberInput/NumberInput";
 import { NameInput } from "./NameInput/NameInput";
 import { AddBtn } from "./AddBtn/AddBtn";
 import { ContactList } from './ContactList/ContactList';
-import { FindСontacts } from './FindСontacts/FindСontacts';
+import { FilterСontacts } from './FilterСontacts/FilterСontacts';
 
 export class App extends Component {
   state = {
@@ -18,6 +18,28 @@ export class App extends Component {
     filter: '',
     name: '',
     number: ''
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    const savedContacts = localStorage.getItem('contacts');
+    console.log(savedContacts);
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    } else {
+      this.setState({
+        contacts: this.state.contacts,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate');
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
   }
 
   handleChangeName = e => {
@@ -55,7 +77,6 @@ export class App extends Component {
   }
 
     deleteContact = Id => {
-      //console.log('delete')
       this.setState(prevState => {
         return {
           contacts: prevState.contacts.filter(
@@ -65,29 +86,16 @@ export class App extends Component {
       });
     };
 
-    changeFilter = e => {
-      this.setState({ filter: e.currentTarget.value });
-      console.log(this.state.filter)
-    };
+    changeFilter = e =>
+    this.setState({ filter: e.target.value.toLowerCase() });
 
-
-    onFilterContacts = () => {
-      let filterContact = [];
-      if (this.state.filter) {
-        filterContact = this.state.contacts.filter(
-          contact =>
-            contact.name.includes(this.state.filter) ||
-            contact.name.toLowerCase().includes(this.state.filter)
-        );
-      } else {
-        return this.state.contacts;
-      }
-      return filterContact;
-    };
+  getVisibleContacts = () =>
+    this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
 
   render() {
-    const { filter } = this.state
-    console.log(this.onFilterContacts())
+    const { filter} = this.state
     return(
       <div>
       <h1>Phonebook</h1>
@@ -99,8 +107,8 @@ export class App extends Component {
           <AddBtn />
       </form>
       <h2>Contacts</h2>
-      <FindСontacts onChange={this.changeFilter}  filter={filter}/>
-      <ContactList onClick={this.deleteContact} filterContacts={this.onFilterContacts()}/>
+      <FilterСontacts onChange={this.changeFilter}  filter={filter}/>
+      <ContactList onClick={this.deleteContact}contacts={this.getVisibleContacts()}/>
       </div>
     )
 }
