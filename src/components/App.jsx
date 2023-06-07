@@ -56,8 +56,12 @@ export class App extends Component {
 
   handleSubmit = e => {
     const {name, number} = this.state
+    this.setState({
+      name: '',
+      number: '',
+    })
     e.preventDefault();
-
+    console.log()
     const newContact = {
       id: nanoid(),
       name,
@@ -101,9 +105,9 @@ export class App extends Component {
       <h1>Phonebook</h1>
       <form onSubmit={this.handleSubmit}>
         <InFormName title='Name' />
-          <NameInput onChange={this.handleChangeName} />
+          <NameInput value={this.state.name} onChange={this.handleChangeName} />
         <InFormName title='Number' />
-          <NumberInput onChange={this.handleChangeNumber} />
+          <NumberInput value={this.state.number} onChange={this.handleChangeNumber} />
           <AddBtn />
       </form>
       <h2>Contacts</h2>
